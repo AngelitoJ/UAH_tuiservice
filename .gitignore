@@ -1,2 +1,4 @@
 tuiservice
 deps/*
+
+*.beam
