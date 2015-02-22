@@ -1,0 +1,11 @@
+{application,tuiservice,
+             [{description,["TUIService, an Erlang based micro service demo for the TUI project.",
+                            "\nCopyright: 2015 Angel J. Alvarez Miguel"]},
+              {author,["angeljalvarezmiguel@gmail.com"]},
+              {vsn,"1.0"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{tuiservice_app,[]}},
+              {env,[]},
+              {modules,[db_srv,ets_master_srv,json,login_handler,top_handler,
+                        top_sup,tuiservice,tuiservice_app,welcome_handler]}]}.
