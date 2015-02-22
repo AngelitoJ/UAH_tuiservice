@@ -58,7 +58,7 @@ app_setup(AppName,Args) ->
     {OptSpecList,OptFunList} = getoptex:collect_option_providers(OptionProviders), 
 
 
-    io:format("~s\nVersion: ~s\n\n",[Description,Version]),
+    io:format("~s  Version: ~s\n\n",[AppFilename, Version]),
 
     %% Parse args using option descriptors and then check args values using provided funs.
     case getoptex:parse_args(OptSpecList, Args, OptFunList) of
@@ -157,9 +157,11 @@ check_debug(Opts) ->
 -spec check_timeout([any()]) -> [any()].
 check_timeout(Opts) ->
     Timeout = proplists:get_value(timeout,Opts),                       %% Get the timeout requested (30 is the default). 
-    case (Timeout == undefined) or (Timeout < 0) or (Timeout > 300) of %% Is requested level between bounds?
-        true ->  [{timeout,30} | proplists:delete(timeout,Opts)];      %% No, correct it and replace the wrong bits. 
-        false -> Opts                                                  %% Yes, return the original list.
+    case (Timeout == undefined) or (Timeout < 0) or (Timeout > 3600) of %% Is requested level between bounds?
+        true  ->  
+                [{timeout,30} | proplists:delete(timeout,Opts)];      %% No, correct it and replace the wrong bits. 
+        false ->
+                Opts                                                  %% Yes, return the original list.
     end.
 
 -ifdef(TEST).
