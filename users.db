@@ -1,0 +1,19 @@
+%% TUI Service project
+%% (C) 2015 Angel J. Alvarez Miguel
+
+{database, [
+			 {user, [
+					 {id         , "000000000000000"}
+					,{login      , "angel@uah.es"}
+					,{roles      , ["SIR_developer", "Resident_erlanger", "Haskeller"]}
+					,{fullname   , "Angel J. Alvarez Miguel"}
+					,{photo      , "http://www.uah.es/photo/angel_alvarez"}
+					]}
+			,{user, [
+					 {id         , "000000000000001"}
+					,{login      , "cervantes@uah.es"}
+					,{roles      , ["Writer", "Resident_Celebrity", "Castillan"]}
+					,{fullname   , "Miguel de Cervantes"}
+					,{photo      , "http://www.uah.es/photo/cervantes"}
+					]}
+		]}.
