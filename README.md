@@ -2,9 +2,21 @@ TUI micro service demo
 ======================
 
 
-TUI microservice demo is a small demo project to show my formar ex-manager and friend the TUI
-project mobile app in a demo working enviroment to evaluate further requirements prior to 
-request a propper 'big iron' service for that app to UAH Computer Deparment.
 
-This is not an official UAH development and it has not been develped during normal working 
-hours at UAH.
+
+	$ ./tuiservice -?
+	tuiservice Version: 1.0
+
+	Usage: ./tuiservice [-D <dbfile>] [-f <dbformat>] [-T [<timeout>]]
+                    	[-P [<procs>]] [-V] [-v] [-d [<debug>]] [-?]
+                    	[-P [<port>]]
+
+		  -D, --dbfile   DB Data file.
+		  -f, --format   DB format <terms|csv>
+		  -T, --timeout  Default app timeout in seconds. [default: 300]
+		  -P, --cores    Number of workers (default 2*core). [default: 8]
+		  -V, --version  Show software version.
+		  -v, --verbose  Show all actions performed.
+		  -d, --debug    Show debug info. [default: 0]
+		  -?, --help     Show this help.
+		  -P, --Port     Default Listening TCP port [default: 8080]
