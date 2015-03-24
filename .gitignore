@@ -2,3 +2,5 @@ tuiservice
 deps/*
 
 *.beam
+
+.rebar/erlcinfo
