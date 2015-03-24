@@ -8,7 +8,6 @@
 %% Option descriptors and funs required for this module to work (see below for a explanation).
 
 option_specs() ->
-    Procesos = erlang:system_info(schedulers_online) * 2,
     {    
 		%%List of getopt descriptors {Name, ShortOpt, LongOpt, ArgSpec, HelpMsg}
         [
@@ -16,8 +15,7 @@ option_specs() ->
             ,{debug,       $d,        "debug",       {integer, 0},                 "Show debug info."}
             ,{verbose,     $v,        "verbose",     undefined,                    "Show all actions performed."}
             ,{version,     $V,        "version",     undefined,                    "Show software version."}
-            ,{procs,       $P,        "cores",       {integer, Procesos },         "Number of workers (default 2*core)."}
-            ,{timeout,     $T,        "timeout",     {integer, 300},                "Default app timeout in seconds."}
+            ,{timeout,     $T,        "timeout",     {integer, 300},               "Default app timeout in seconds."}
         ]
         %% args processing funs required for some options
         ,[
