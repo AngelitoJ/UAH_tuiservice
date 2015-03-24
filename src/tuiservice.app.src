@@ -11,7 +11,8 @@
   {registered, []},
   {applications, [
                    kernel
-                  ,stdlib]},
+                  ,stdlib
+                  ]},
   {mod, { tuiservice_app, []}},
   {env, []}
  ]}.
