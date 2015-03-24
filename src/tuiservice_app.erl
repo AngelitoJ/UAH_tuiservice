@@ -19,7 +19,7 @@ option_specs() ->
     {    
         %%List of getopt descriptors {Name, ShortOpt, LongOpt, ArgSpec, HelpMsg}
         [
-            {port,     $P,        "Port",     {integer, 8080},                "Default Listening TCP port"}
+            {port,     undefined,        "Port",     {integer, 8080},                "Default Listening TCP port"}
         ]
         %% args processing funs required for some options
         ,[
@@ -46,39 +46,83 @@ check_tcp_port(Opts) ->
 
 start(_StartType, StartArgs) ->
 
-    ok               = application:start(crypto),
-    ok               = application:start(ranch),
-    ok               = application:start(cowlib),
-    ok               = application:start(cowboy),
-   {ok, CmdlineOpts} = application:get_env(cmdline_options),    %% recover Opts from the enviroment
-   AppOptions        = [{start_args,StartArgs}|CmdlineOpts],           %% Combine start args with cmdline options
+    {ok, CmdlineOpts} = application:get_env(cmdline_options),    %% recover Opts from the enviroment
+    AppOptions        = [{start_args,StartArgs}|CmdlineOpts],           %% Combine start args with cmdline options
 
-
-    Routes =  [
-                 {"/"                            ,top_handler     ,[]}
-                ,{"/welcome/:user_id/"           ,welcome_handler ,[]}
-                ,{"/login/:login_id/:password/"  ,login_handler   ,[]}
-                ],
-
-    Dispatch     = cowboy_router:compile([ {'_',Routes} ]),
-    ListenPort   = proplists:get_value(port, AppOptions),
-    {ok, _}      = cowboy:start_http(
-                                         http
-                                        ,100
-                                        ,[{port, ListenPort}]
-                                        ,[{env, [{dispatch, Dispatch}]}]
-                                        ),
-  
-    case top_sup:start_link(AppOptions) of
-        {ok, Pid} ->
-                    io:format("Application started...\n\n"),
-                    {ok, Pid};
-        {error,Other} ->
-                    io:format("Application crashed! Error: ~p\n",[Other]),
-                    {error, Other}
+    Result = sequence(
+                        {ok, none, AppOptions},
+                        [
+                             fun start_cowboy/2
+                            ,fun start_app/2
+                        ]
+                    ),
+    
+    case Result of
+        {ok, State, _} -> {ok, State};
+        {error, Reason, _State} -> {error, Reason}
     end.
+
+  
 
 stop(_State) ->
     io:format("Application stopped...\n\n"),
     ok.
+
+
+%% ===================================================================
+%% Utility Functions
+%% ===================================================================
+
+
+% Bind computations ala Haskell
+bind(Fun, {ok, State, Env}) when is_function(Fun) -> Fun(State, Env);
+bind(_, {error, Reason, State}) -> {error, Reason, State}.  
+
+
+%% Sequence a list of computations
+sequence(Initial, Computations) ->
+    lists:foldl(fun bind/2, Initial, Computations).
+
+%% Star app using options or signal an error
+start_app(State, Options) ->
+    case top_sup:start_link(Options) of
+        {ok, Pid} ->
+                    io:format("Application tuiservice started...\n\n"),
+                    {ok, Pid, Options};
+        {error,Other} ->
+                    io:format("Application tuiservice crashed! Error: ~p\n",[Other]),
+                    {error, Other, State}
+    end.
+
+%% start cowboy and all dependences. 
+start_cowboy(State, Options) ->
+    ok                = application:start(crypto),
+    ok                = application:start(ranch),
+    ok                = application:start(cowlib),
+    ok                = application:start(cowboy),
+
+    Routes            =  [
+                             {"/"                            ,top_handler     ,[]}
+                            ,{"/welcome/:user_id/"           ,welcome_handler ,[]}
+                            ,{"/login/:login_id/:password/"  ,login_handler   ,[]}
+                        ],
+    Dispatch          = cowboy_router:compile([ {'_',Routes} ]),
+    ListenPort        = proplists:get_value(port, Options),  
+
+    io:format("Starting Cowboy..\n\n"),
+    case cowboy:start_http(
+                             http
+                            ,100
+                            ,[{port, ListenPort}]
+                            ,[{env, [{dispatch, Dispatch}]}]
+                            ) of
+        {ok,_}          ->
+                            {ok, State, Options};
+        {error, Reason} ->
+                            {error, Reason, State}
+    end.
+
+
+
+
 
