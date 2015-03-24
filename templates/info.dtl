@@ -1,0 +1,9 @@
+<html>
+<head>
+	<meta charset=\"utf-8\">
+	<title>REST TUI</title>
+</head>
+<body>
+	<p>{{ info }}</p>
+</body>
+</html>
