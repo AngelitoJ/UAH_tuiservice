@@ -52,7 +52,9 @@ term_to_json(Data) ->
 	json:term_to_json(Data).
 
 term_to_html(Data) ->
-	<<"<html><head><meta charset=\"utf-8\"><title>REST TUI</title></head><body><p>", Data/binary, "</p></body></html>">>.
+%%	<<"<html><head><meta charset=\"utf-8\"><title>REST TUI</title></head><body><p>", Data/binary, "</p></body></html>">>.
+	{ok, Body} = info_dtl:render([{info, Data}]),
+	Body.
 
 term_to_text(Data) ->
 	list_to_binary(io_lib:format("~p",[Data])).
