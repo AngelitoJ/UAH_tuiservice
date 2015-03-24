@@ -6,3 +6,5 @@ deps/*
 .rebar/erlcinfo
 
 ebin/tuiservice.app
+
+ebin/tuiservice.app
