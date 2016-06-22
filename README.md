@@ -1,7 +1,10 @@
 TUI micro service demo
 ======================
 
+TUI is a project leaded by a Spanish bank in collaboration with several Spanish universities, to provide smart card services 
+to College Students and Staff.
 
+This is a Quick and dirty hack based on cowlboy to provide micro setup for a TUI web services demo. 
 
 
 	$ ./tuiservice -?
